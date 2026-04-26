@@ -471,7 +471,7 @@
 // =============================================
 // ⚙️ 設定區
 // =============================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwjaLBE6JjI0qpPKZFlCPWWoRt214eO_jXLmRoxhL7WhPxFU52LoS-_utkja9-TUfHT/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZkE2wE8brIDGtao5_3BgQA9SynRbHpxpw12KDa9gul-U3f1LjUWunm-64hPlzwO_r/exec';
 // =============================================
 
 let allOrders = [];
@@ -524,7 +524,7 @@ const DEMO_ORDERS = [
 async function loadOrders() {
   setLoading(true);
   
-  if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwjaLBE6JjI0qpPKZFlCPWWoRt214eO_jXLmRoxhL7WhPxFU52LoS-_utkja9-TUfHT/exec') {
+  if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyZkE2wE8brIDGtao5_3BgQA9SynRbHpxpw12KDa9gul-U3f1LjUWunm-64hPlzwO_r/exec') {
     await new Promise(r => setTimeout(r, 600));
     allOrders = DEMO_ORDERS;
     document.getElementById('config-banner').style.display = 'block';
@@ -638,12 +638,13 @@ async function confirmDelete() {
   updateStats();
 
   // 同步到 Apps Script
-  if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbwjaLBE6JjI0qpPKZFlCPWWoRt214eO_jXLmRoxhL7WhPxFU52LoS-_utkja9-TUfHT/exec') {
+  if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
     try {
-      const formData = new FormData();
-      formData.append('action', 'deleteOrder');
-      formData.append('id', id);
-      await fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData });
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'deleteOrder', id })
+      });
     } catch(e) {
       console.error('刪除同步失敗', e);
     }
@@ -667,14 +668,13 @@ async function toggleStatus(id, type) {
   updateStats();
 
   // 同步到 Apps Script
-  if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbwjaLBE6JjI0qpPKZFlCPWWoRt214eO_jXLmRoxhL7WhPxFU52LoS-_utkja9-TUfHT/exec') {
+  if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
     try {
-      const formData = new FormData();
-      formData.append('action', 'updateStatus');
-      formData.append('id', id);
-      formData.append('confirmed', order.confirmed);
-      formData.append('done', order.done);
-      await fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData });
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'updateStatus', id, confirmed: order.confirmed, done: order.done })
+      });
     } catch(e) {
       console.error('更新失敗', e);
     }
