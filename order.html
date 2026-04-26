@@ -434,7 +434,8 @@
 
   <!-- CONFIG NOTICE (只在未設定時顯示，設定完可刪除) -->
   <div class="config-notice" id="config-notice">
-  
+    ⚙️ <strong>老闆設定提示：</strong>請將下方 <code>APPS_SCRIPT_URL</code> 換成您的 Google Apps Script 網址，設定完成後可刪除此提示。
+  </div>
 
   <div class="section-label">📋 填寫訂貨資料</div>
 
@@ -536,7 +537,7 @@
 // =============================================
 // ⚙️ 設定區：請填入您的 Apps Script 網址
 // =============================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwjaLBE6JjI0qpPKZFlCPWWoRt214eO_jXLmRoxhL7WhPxFU52LoS-_utkja9-TUfHT/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZkE2wE8brIDGtao5_3BgQA9SynRbHpxpw12KDa9gul-U3f1LjUWunm-64hPlzwO_r/exec';
 // =============================================
 
 let currentMethod = 'text';
@@ -683,35 +684,40 @@ async function submitOrder() {
   document.getElementById('loading').classList.add('show');
 
   try {
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('date', date);
-    formData.append('contentType', contentType);
-    formData.append('contentValue', contentValue);
-    formData.append('submitTime', new Date().toLocaleString('zh-TW'));
+    // 準備 JSON 資料（Apps Script 用 JSON body 才能接收大型 base64）
+    const payload = {
+      name,
+      date,
+      contentType,
+      contentValue,
+      submitTime: new Date().toLocaleString('zh-TW')
+    };
 
     if (contentType === 'voice' && audioBlob) {
-      // 轉成 base64 傳送，相容 Apps Script
       const audioBase64 = await blobToBase64(audioBlob);
-      formData.append('audioBase64', audioBase64);
-      formData.append('audioMime', audioBlob.type || 'audio/webm');
+      payload.audioBase64 = audioBase64;
+      payload.audioMime = audioBlob.type || 'audio/webm';
     } else if (contentType === 'photo') {
       const photoInput = document.getElementById('photo-input');
       if (photoInput.files[0]) {
         const photoBase64 = await blobToBase64(photoInput.files[0]);
-        formData.append('photoBase64', photoBase64);
-        formData.append('photoMime', photoInput.files[0].type || 'image/jpeg');
+        payload.photoBase64 = photoBase64;
+        payload.photoMime = photoInput.files[0].type || 'image/jpeg';
       }
     }
 
     // 若還沒設定 URL，用本地模擬
     if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-      await new Promise(r => setTimeout(r, 1200)); // 模擬延遲
+      await new Promise(r => setTimeout(r, 1200));
       showSuccess(name, date, contentType, contentValue);
       return;
     }
 
-    const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: formData });
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // Apps Script 用 text/plain 接 JSON
+      body: JSON.stringify(payload)
+    });
     const json = await res.json();
 
     if (json.status === 'ok') {
