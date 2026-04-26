@@ -667,7 +667,7 @@ async function toggleStatus(id, type) {
   updateStats();
 
   // 同步到 Apps Script
-  if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+  if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbwjaLBE6JjI0qpPKZFlCPWWoRt214eO_jXLmRoxhL7WhPxFU52LoS-_utkja9-TUfHT/exec') {
     try {
       const formData = new FormData();
       formData.append('action', 'updateStatus');
