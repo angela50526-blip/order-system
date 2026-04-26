@@ -638,7 +638,7 @@ async function confirmDelete() {
   updateStats();
 
   // 同步到 Apps Script
-  if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+  if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbyZkE2wE8brIDGtao5_3BgQA9SynRbHpxpw12KDa9gul-U3f1LjUWunm-64hPlzwO_r/exec') {
     try {
       await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
