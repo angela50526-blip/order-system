@@ -431,7 +431,8 @@
 
 <!-- CONFIG BANNER -->
 <div class="config-banner" id="config-banner">
-
+  ⚙️ <strong>設定提示：</strong>請將 <code>APPS_SCRIPT_URL</code> 換成您的 Google Apps Script 網址，後台才能讀取真實資料。<br>
+  目前顯示的是範例資料。
 </div>
 
 <!-- FILTER BAR -->
@@ -524,7 +525,7 @@ const DEMO_ORDERS = [
 async function loadOrders() {
   setLoading(true);
   
-  if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyZkE2wE8brIDGtao5_3BgQA9SynRbHpxpw12KDa9gul-U3f1LjUWunm-64hPlzwO_r/exec') {
+  if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
     await new Promise(r => setTimeout(r, 600));
     allOrders = DEMO_ORDERS;
     document.getElementById('config-banner').style.display = 'block';
@@ -638,7 +639,7 @@ async function confirmDelete() {
   updateStats();
 
   // 同步到 Apps Script
-  if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbyZkE2wE8brIDGtao5_3BgQA9SynRbHpxpw12KDa9gul-U3f1LjUWunm-64hPlzwO_r/exec') {
+  if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
     try {
       await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
@@ -668,7 +669,7 @@ async function toggleStatus(id, type) {
   updateStats();
 
   // 同步到 Apps Script
-  if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbyZkE2wE8brIDGtao5_3BgQA9SynRbHpxpw12KDa9gul-U3f1LjUWunm-64hPlzwO_r/exec') {
+  if (APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
     try {
       await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
